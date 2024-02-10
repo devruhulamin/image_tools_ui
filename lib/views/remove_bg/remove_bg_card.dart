@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:photo_apps/state/image_upload/image_data_provider.dart';
 import 'package:photo_apps/state/remove_bg/providers/remove_bg_provider.dart';
 import 'package:photo_apps/views/components/animation/loading_animation.dart';
+import 'package:photo_apps/views/remove_bg/components/remove_bg_image.dart';
 
 class RemoveBgCard extends ConsumerWidget {
   final ImageDataWithAspectRation imageData;
@@ -11,22 +12,15 @@ class RemoveBgCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final removeBg = ref.watch(removeBgProvider(imageData.imgData));
-    return SizedBox(
-      width: 500,
-      height: 400,
+    return Container(
+      constraints: const BoxConstraints(
+        maxHeight: 600,
+      ),
       child: AspectRatio(
         aspectRatio: imageData.aspectRation,
         child: removeBg.when(
           data: (data) {
-            return Card(
-              surfaceTintColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Image.network(
-                  'http://127.0.0.1:8000${data.processedImageUrl}',
-                ),
-              ),
-            );
+            return RemoveBgImageSection(data: data);
           },
           error: (error, stackTrace) {
             return Center(
