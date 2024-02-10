@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:html' as html;
 
 import 'package:photo_apps/state/remove_bg/models/image_model.dart';
+import 'package:photo_apps/state/remove_bg/providers/image_background_color_provider.dart';
 import 'package:screenshot/screenshot.dart';
 
 class RemoveBgImageSection extends ConsumerStatefulWidget {
@@ -24,18 +25,22 @@ class _RemoveBgImageSectionState extends ConsumerState<RemoveBgImageSection> {
         Container(
           height: 500,
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.blue, width: 3),
+            border: Border.all(color: Colors.blue, width: 4),
           ),
           child: Screenshot(
             controller: screenshotController,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 38, 31, 31),
-              ),
-              child: Image.network(
-                'http://127.0.0.1:8000${widget.data.processedImageUrl}',
-                fit: BoxFit.fitHeight,
-              ),
+            child: Consumer(
+              builder: (context, ref, child) {
+                return Container(
+                  decoration: BoxDecoration(
+                    color: ref.watch(imageBgColorProvider),
+                  ),
+                  child: Image.network(
+                    'http://127.0.0.1:8000${widget.data.processedImageUrl}',
+                    fit: BoxFit.fitHeight,
+                  ),
+                );
+              },
             ),
           ),
         ),
