@@ -25,6 +25,13 @@ class ImageUploadIconText extends StatelessWidget {
                 color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
           ),
           child: const Text('Browse'),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        const Text(
+          "Supports: JPEG,JPG,PNG",
+          style: TextStyle(color: Colors.grey),
         )
       ],
     );

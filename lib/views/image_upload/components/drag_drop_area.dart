@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:photo_apps/state/image_upload/image_data_provider.dart';
+import 'package:photo_apps/views/image_upload/extensions/get_image_aspect_ration_data.dart';
 
-class DragAndDropArea extends StatefulWidget {
+class DragAndDropArea extends ConsumerStatefulWidget {
   const DragAndDropArea({super.key});
 
   @override
-  State<DragAndDropArea> createState() => _DragAndDropAreaState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _DragAndDropAreaState();
 }
 
-class _DragAndDropAreaState extends State<DragAndDropArea> {
+class _DragAndDropAreaState extends ConsumerState<DragAndDropArea> {
   late DropzoneViewController controller1;
   String message1 = 'Drop something here';
   String message2 = 'Drop something here';
@@ -22,14 +26,17 @@ class _DragAndDropAreaState extends State<DragAndDropArea> {
       onCreated: (DropzoneViewController ctrl) async {
         controller1 = ctrl;
       },
-      onLoaded: () => print('Zone loaded'),
-      onError: (String? ev) => print('Error: $ev'),
       onHover: () {
         setState(() {
           highlighted1 = true;
         });
       },
-      onDrop: (dynamic ev) => print('Dropxx: $ev'),
+      onDrop: (dynamic ev) async {
+        final filebytes = await controller1.getFileData(ev);
+        final imgAr = await filebytes.getImageAspectRation();
+        ref.read(imageDataProvider.notifier).state =
+            ImageDataWithAspectRation(imgData: filebytes, aspectRation: imgAr);
+      },
       onLeave: () {
         setState(() {
           highlighted1 = false;
